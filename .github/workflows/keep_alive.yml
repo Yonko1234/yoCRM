@@ -2,7 +2,7 @@ name: Keep Streamlit & Supabase Alive
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # На всеки 6 часа
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:
@@ -11,15 +11,13 @@ jobs:
     steps:
       - name: Ping Streamlit App
         run: |
-          # Заявка с User-Agent и timeout, за да се принуди Streamlit Cloud да се събуди
-          curl -sL -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" --max-time 30 "https://yo-crm.streamlit.app" > /dev/null
+          curl -sL -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" --max-time 30 "https://yo-crm.streamlit.app" > /dev/null || true
 
       - name: Ping Supabase Database
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          # Изпращане на директна REST заявка към Supabase, за да се занули 7-дневният брояч
           if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
             curl -s -f -X GET "$SUPABASE_URL/rest/v1/" \
               -H "apikey: $SUPABASE_ANON_KEY" \
