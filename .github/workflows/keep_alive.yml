@@ -1,4 +1,4 @@
-name: Keep Streamlit Alive
+name: Keep Streamlit & Supabase Alive
 
 on:
   schedule:
@@ -9,6 +9,22 @@ jobs:
   wake-up:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Streamlit
+      - name: Ping Streamlit App
         run: |
-          curl -sL "https://yo-crm.streamlit.app" > /dev/null
+          # Заявка с User-Agent и timeout, за да се принуди Streamlit Cloud да се събуди
+          curl -sL -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" --max-time 30 "https://yo-crm.streamlit.app" > /dev/null
+
+      - name: Ping Supabase Database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          # Изпращане на директна REST заявка към Supabase, за да се занули 7-дневният брояч
+          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
+            curl -s -f -X GET "$SUPABASE_URL/rest/v1/" \
+              -H "apikey: $SUPABASE_ANON_KEY" \
+              -H "Authorization: Bearer $SUPABASE_ANON_KEY" > /dev/null
+            echo "Supabase successfully pinged!"
+          else
+            echo "Supabase secrets are not set, skipping DB ping."
+          fi
