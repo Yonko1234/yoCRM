@@ -1,11 +1,12 @@
 from datetime import datetime
-import sqlite3
 import pandas as pd
+from sqlalchemy import create_engine, text
 import streamlit as st
 
 
-def get_connection():
-    return sqlite3.connect(r"D:\my crm\crm.db")
+def get_engine():
+    db_url = st.secrets["postgres"]["url"]
+    return create_engine(db_url)
 
 
 def init_db():
