@@ -136,9 +136,9 @@ if menu == "Лийдове":
     with engine.connect() as conn:
         leads_df = pd.read_sql(
             text(
-                "SELECT id, company as [Компания], name as [Име], last_name as"
-                " [Фамилия], email as [Имейл], phone as [Телефон], status as"
-                " [Статус] FROM leads ORDER BY id DESC"
+                'SELECT id, company as "Компания", name as "Име", last_name as'
+                ' "Фамилия", email as "Имейл", phone as "Телефон", status as'
+                ' "Статус" FROM leads ORDER BY id DESC'
             ),
             conn,
         )
@@ -285,8 +285,8 @@ if menu == "Лийдове":
             with engine.connect() as conn:
                 l_addr = pd.read_sql(
                     text(
-                        "SELECT address_text as [Адрес], address_type as [Тип]"
-                        " FROM addresses WHERE lead_id = :id"
+                        'SELECT address_text as "Адрес", address_type as'
+                        ' "Тип" FROM addresses WHERE lead_id = :id'
                     ),
                     conn,
                     params={"id": int(selected_lead_id)},
@@ -304,8 +304,8 @@ elif menu == "Клиенти":
     with engine.connect() as conn:
         clients_df = pd.read_sql(
             text(
-                "SELECT id, company as [Компания], name as [Име], last_name as"
-                " [Фамилия], email as [Имейл], phone as [Телефон] FROM clients"
+                'SELECT id, company as "Компания", name as "Име", last_name as'
+                ' "Фамилия", email as "Имейл", phone as "Телефон" FROM clients'
                 " ORDER BY id DESC"
             ),
             conn,
@@ -401,8 +401,8 @@ elif menu == "Клиенти":
             with engine.connect() as conn:
                 c_addr = pd.read_sql(
                     text(
-                        "SELECT address_text as [Адрес], address_type as [Тип]"
-                        " FROM addresses WHERE client_id = :id"
+                        'SELECT address_text as "Адрес", address_type as'
+                        ' "Тип" FROM addresses WHERE client_id = :id'
                     ),
                     conn,
                     params={"id": int(selected_client_id)},
@@ -496,8 +496,8 @@ elif menu == "Адреси":
     with engine.connect() as conn:
         if selected_filter == "--- Всички адреси ---":
             query = """
-                SELECT a.id, a.address_text as [Адрес], a.address_type as [Тип],
-                       COALESCE(c.company, l.company, c.name, l.name) as [Свързан обект]
+                SELECT a.id, a.address_text as "Адрес", a.address_type as "Тип",
+                       COALESCE(c.company, l.company, c.name, l.name) as "Свързан обект"
                 FROM addresses a
                 LEFT JOIN clients c ON a.client_id = c.id
                 LEFT JOIN leads l ON a.lead_id = l.id
@@ -507,13 +507,13 @@ elif menu == "Адреси":
             t_type, t_id = target_options[selected_filter]
             if t_type == "lead":
                 query = (
-                    "SELECT id, address_text as [Адрес], address_type as [Тип]"
-                    " FROM addresses WHERE lead_id = :id"
+                    'SELECT id, address_text as "Адрес", address_type as "Тип"'
+                    ' FROM addresses WHERE lead_id = :id'
                 )
             else:
                 query = (
-                    "SELECT id, address_text as [Адрес], address_type as [Тип]"
-                    " FROM addresses WHERE client_id = :id"
+                    'SELECT id, address_text as "Адрес", address_type as "Тип"'
+                    ' FROM addresses WHERE client_id = :id'
                 )
             addresses_df = pd.read_sql(
                 text(query), conn, params={"id": int(t_id)}
@@ -611,8 +611,8 @@ elif menu == "Сделки":
     with engine.connect() as conn:
         deals_df = pd.read_sql(
             text(
-                "SELECT id, title as [Предмет на сделката], amount as [Сума"
-                " (BGN)], stage as [Етап] FROM deals ORDER BY id DESC"
+                'SELECT id, title as "Предмет на сделката", amount as "Сума'
+                ' (BGN)", stage as "Етап" FROM deals ORDER BY id DESC'
             ),
             conn,
         )
@@ -751,8 +751,8 @@ elif menu == "Срещи":
     with engine.connect() as conn:
         meetings_df = pd.read_sql(
             text(
-                "SELECT id, meeting_date as [Дата], company as [Компания],"
-                " contact_name as [Лице за контакт], notes as [Бележки] FROM"
+                'SELECT id, meeting_date as "Дата", company as "Компания",'
+                ' contact_name as "Лице за контакт", notes as "Бележки" FROM'
                 " meetings ORDER BY meeting_date DESC"
             ),
             conn,
